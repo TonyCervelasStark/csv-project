@@ -14,6 +14,11 @@ public class Employee {
 	String firstname;
 	String agency;
 
+	
+	
+	public Employee() {
+	}
+
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", firstname=" + firstname + ", agency=" + agency + "]";
