@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -31,7 +32,7 @@ public class Main {
 
 				for (CSVRecord record : records) {
 
-					
+/*					
 					// Create Employee table
 					Employee employee = new Employee();
 
@@ -49,15 +50,13 @@ public class Main {
 					// Create Training table
 					Training training = new Training();
 					Date date = new Date();
-
+					
 					training.month = Integer.valueOf(record.get(0));
 
-					/*if (record.get(2).isEmpty()) {
+					if (record.get(2).isEmpty()) {
 						training.nbDays = new BigDecimal(0);
 					} else
-						training.nbDays = new BigDecimal(record.get(2));*/
-					
-					training.nbDays = new BigDecimal(0);
+						training.nbDays = new BigDecimal(record.get(2).replaceAll(",", "."));
 					
 					training.expectedDate = date;
 					training.realDate = date;
@@ -66,16 +65,17 @@ public class Main {
 					training.organism = record.get(9);
 
 					em.persist(training);
-
+*/
 					// try date
-					/*
-					 * DateTimeFormatter formatter =
-					 * DateTimeFormatter.ofPattern("dd-LLLL", Locale.FRANCE);
-					 * String text = record.get(3); LocalDate parsedDate =
-					 * LocalDate.parse(text, formatter);
-					 * 
-					 * System.out.println(parsedDate);
-					 */
+					
+					/*String text = "dd-LLLL";
+					SimpleDateFormat formatter = new SimpleDateFormat("2016-MM-dd");
+					Date dateStr = formatter.parse(text);
+					String formattedDate = formatter.format(dateStr);
+					
+					 
+					System.out.println(parsedDate);*/
+					 
 
 					/*
 					 * Training training = new Training();
@@ -93,7 +93,7 @@ public class Main {
 
 					/*
 					 * // Define elements of the table String mois =
-					 * record.get(0); String agence = record.get(1); String
+					 * record.get(0); String agence = record.get(1);String
 					 * nbJours = record.get(2); String dateAttendue =
 					 * record.get(3); String dateReelle = record.get(4); String
 					 * intitule = record.get(5); String lieu = record.get(6);
