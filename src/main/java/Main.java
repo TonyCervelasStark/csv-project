@@ -2,18 +2,23 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.PrimitiveIterator.OfDouble;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+import javax.persistence.EntityManager;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.hibernate.annotations.common.reflection.java.generics.TypeEnvironmentFactory;
 
 public class Main {
 
 	public static void main(String[] args) {
 
+		EntityManager em = EmFactory.createEntityManager();
+		em.getTransaction().begin();
+		
 		Reader in;
 		try {
 			in = new FileReader("sopra-modified.csv");
@@ -23,23 +28,42 @@ public class Main {
 						
 				for (CSVRecord record : records) {
 					
-					Employee employee = new Employee(record.get(e));
-					Training training = new Training();
+					Employee employee = new Employee();
 					if(record.get(1).isEmpty()){
 						employee.agency = "undefined";
 					}
 					else
 						employee.agency = record.get(1);
 					
-					if(record.get(2).isEmpty()){
-						training.nbDays = null;
-					}
-					else
-						training.nbDays = BigDecimal.valueOf(record.get(2));
 					
 					employee.name = record.get(7);
 					employee.firstname= record.get(8);
-					System.out.println(training.nbDays);
+					
+					// System.out.println(employee);
+					em.persist(employee);
+					
+					
+					// try date
+					/*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-LLLL", Locale.FRANCE);
+					String text = record.get(3);
+					LocalDate parsedDate = LocalDate.parse(text, formatter);
+					
+					System.out.println(parsedDate);*/
+					
+					
+					
+					/*Training training = new Training();
+					
+					if(record.get(1).isEmpty()){
+						employee.agency = "undefined";
+					}
+					else
+						employee.agency = record.get(1);
+					
+					
+					employee.name = record.get(7);
+					employee.firstname= record.get(8);*/
+					
 					//display records
 					//System.out.println(record);
 					
@@ -88,6 +112,9 @@ public class Main {
 			e.printStackTrace();
 		}
 
+		em.getTransaction().commit();
+		em.close();
 	}
-
+	
+	
 }

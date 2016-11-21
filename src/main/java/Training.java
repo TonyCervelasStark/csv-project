@@ -5,9 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-import com.sun.prism.impl.Disposer.Record;
 
 @Entity
 public class Training {
@@ -22,10 +19,6 @@ public class Training {
 	Date realDate;
 	String title;
 	String place;
-	
-	@OneToOne
-	Employee employee;
-	
 	String Organism;
 	
 	
