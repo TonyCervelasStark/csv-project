@@ -64,7 +64,7 @@ public class Main {
 					training.organism = record.get(9);
 
 					em.persist(training);
-
+					
 				}
 
 				// System.out.println(records.getRecordNumber());
