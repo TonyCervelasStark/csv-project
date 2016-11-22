@@ -36,7 +36,7 @@ public class Employee {
 	}
 
 	public void setAgency(String agency) {
-		this.agency = agency;
+			this.agency = agency;
 	}
 
 	public String getName() {

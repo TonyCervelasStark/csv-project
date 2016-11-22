@@ -46,6 +46,7 @@ public class Main {
 					employee.name = record.get(7);
 					employee.firstname = record.get(8);
 
+					
 					String query = "SELECT e FROM Employee e WHERE e.name=:name AND e.firstname=:firstname AND e.agency=:agency";
 					List<Employee> list;
 					list = (List<Employee>) em
@@ -55,7 +56,7 @@ public class Main {
 							.setParameter("agency", employee.agency)
 							.getResultList();
 					
-					if(list.isEmpty()){
+					if(list.isEmpty() &&  !employee.name.isEmpty() && !employee.firstname.isEmpty() && employee.agency != "undefined"){
 						em.persist(employee);
 					}
 					
@@ -123,25 +124,5 @@ public class Main {
 
 		return date;
 	}
-
-	/*@SuppressWarnings("unchecked")
-	public static boolean avoidDouble(String name, String firstname, String agency) {
-		//EntityManager e = EmFactory.createEntityManager();
-		//em.getTransaction().begin();
-		String query = "SELECT e FROM Employee e WHERE e.name=:name AND e.firstname=:firstname AND e.agency=:agency";
-		List<Employee> list;
-		list = (List<Employee>) e
-				.createQuery(query)
-				.setParameter("name", name)
-				.setParameter("firstname", firstname)
-				.setParameter("agency", agency)
-				.getResultList();
-		
-		if(list != null){
-			return false;
-		}
-
-		return true;
-	}*/
 
 }
