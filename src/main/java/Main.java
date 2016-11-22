@@ -3,9 +3,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -14,12 +15,11 @@ import javax.persistence.EntityManager;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.hibernate.jpa.criteria.expression.function.CurrentDateFunction;
 
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 
 		EntityManager em = EmFactory.createEntityManager();
 		em.getTransaction().begin();
@@ -32,7 +32,7 @@ public class Main {
 
 				for (CSVRecord record : records) {
 
-/*					
+					
 					// Create Employee table
 					Employee employee = new Employee();
 
@@ -49,7 +49,6 @@ public class Main {
 					
 					// Create Training table
 					Training training = new Training();
-					Date date = new Date();
 					
 					training.month = Integer.valueOf(record.get(0));
 
@@ -58,62 +57,13 @@ public class Main {
 					} else
 						training.nbDays = new BigDecimal(record.get(2).replaceAll(",", "."));
 					
-					training.expectedDate = date;
-					training.realDate = date;
+					training.expectedDate = modifyDate(record.get(3));
+					training.realDate = modifyDate(record.get(4));
 					training.title = record.get(5);
 					training.place = record.get(6);
 					training.organism = record.get(9);
 
 					em.persist(training);
-*/
-					// try date
-					
-					/*String text = "dd-LLLL";
-					SimpleDateFormat formatter = new SimpleDateFormat("2016-MM-dd");
-					Date dateStr = formatter.parse(text);
-					String formattedDate = formatter.format(dateStr);
-					
-					 
-					System.out.println(parsedDate);*/
-					 
-
-					/*
-					 * Training training = new Training();
-					 * 
-					 * if(record.get(1).isEmpty()){ employee.agency =
-					 * "undefined"; } else employee.agency = record.get(1);
-					 * 
-					 * 
-					 * employee.name = record.get(7); employee.firstname=
-					 * record.get(8);
-					 */
-
-					// display records
-					// System.out.println(record);
-
-					/*
-					 * // Define elements of the table String mois =
-					 * record.get(0); String agence = record.get(1);String
-					 * nbJours = record.get(2); String dateAttendue =
-					 * record.get(3); String dateReelle = record.get(4); String
-					 * intitule = record.get(5); String lieu = record.get(6);
-					 * String nom = record.get(7); String prenom =
-					 * record.get(8); String organisme = record.get(9);
-					 * System.out.println(agence);
-					 */
-
-					/*
-					 * //Display elements of the table
-					 * System.out.println("//////////////////////");
-					 * System.out.println(mois); System.out.println(agence);
-					 * System.out.println(nbJours);
-					 * System.out.println(dateAttendue);
-					 * System.out.println(dateReelle);
-					 * System.out.println(intitule); System.out.println(lieu);
-					 * System.out.println(nom); System.out.println(prenom);
-					 * System.out.println(organisme);
-					 * System.out.println("//////////////////////");
-					 */
 
 				}
 
@@ -132,5 +82,30 @@ public class Main {
 		
 		EmFactory.getInstance().close();
 	}
+	
+	
+public static Date modifyDate(String text){
+		
+		if(text.isEmpty()){
+			return null;
+		}
+	
+		Date date;
+		Calendar cal = Calendar.getInstance();
+		String modifiedText = text+".";
+		DateFormat format = new SimpleDateFormat("dd-MMM", Locale.FRENCH);
+		
+		try {
+			cal.setTime(format.parse(modifiedText));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cal.add(Calendar.YEAR, 46);
+		date = cal.getTime();
+		
+		return date;
+	}
+	
 
 }

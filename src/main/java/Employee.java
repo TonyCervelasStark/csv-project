@@ -13,8 +13,6 @@ public class Employee {
 	String name;
 	String firstname;
 	String agency;
-
-	
 	
 	public Employee() {
 	}

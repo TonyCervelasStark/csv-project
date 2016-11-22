@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Training {
@@ -20,6 +21,11 @@ public class Training {
 	String title;
 	String place;
 	String organism;
+	
+	/*
+	@ManyToOne
+	TrainingDemand demand;
+	*/
 	
 	public Training() {
 	}
