@@ -1,3 +1,4 @@
+package com.sopra.work;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.persistence.EntityManager;
