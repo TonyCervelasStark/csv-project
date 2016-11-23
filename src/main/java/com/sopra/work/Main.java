@@ -46,7 +46,7 @@ public class Main {
 					employee.setFirstname(record.get(8));
 					FormationService serviceEmployee = new FormationService();
 					employee = serviceEmployee.avoidDoubleAndEmptyEmployee(employee, em);
-					System.out.println(employee);
+					
 
 					// Table Training
 					Training training = new Training();
@@ -68,16 +68,13 @@ public class Main {
 					FormationService serviceTraining = new FormationService();
 					training = serviceTraining.avoidDoubleAndEmptyTraining(training, em);
 					
-					/*
+					
 					//Table de jointure
 					TrainingDemand td = new TrainingDemand();
 					td.setEmployee(employee);
 					td.setTraining(training);
 					FormationService serviceTrainingDemand = new FormationService();
 					td = serviceTrainingDemand.createTrainingDemand(td, em);
-					*/
-					
-					
 				}
 				// System.out.println(records.getRecordNumber());
 			} catch (IOException e) {

@@ -19,6 +19,13 @@ public class TrainingDemand {
 
 	@ManyToOne
 	Training training;
+	
+	
+
+	@Override
+	public String toString() {
+		return "TrainingDemand [id=" + id + ", employee=" + employee + ", training=" + training + "]";
+	}
 
 	public Employee findEmployeeById(String name, EntityManager em) {
 		return this.employee = em.find(Employee.class, name);

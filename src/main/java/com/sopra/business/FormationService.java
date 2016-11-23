@@ -27,9 +27,10 @@ public class FormationService {
 	
 	if (list.isEmpty() && !employee.getName().isEmpty() && !employee.getFirstname().isEmpty()) {
 		em.persist(employee);
+		return employee;
 	}
 	
-	return employee;
+	return null;
 	
 	}
 	
@@ -55,16 +56,16 @@ public class FormationService {
 		
 		if (list.isEmpty() && training.getMonth() != 0 && !training.getTitle().isEmpty()) {
 			em.persist(training);
+			return training ;
 
 		}
 		
-		return training ;
+		return null ;
 		
 	}
 	
 	@SuppressWarnings("unchecked")
 	public TrainingDemand createTrainingDemand(TrainingDemand td, EntityManager em){
-		
 		
 		String query = "SELECT td FROM TrainingDemand td WHERE td.employee=:employee AND td.training=:training";
 		
@@ -76,13 +77,11 @@ public class FormationService {
 				.setParameter("training", td.getTraining())
 				.getResultList();
 		
-		if (list.isEmpty()) {
+		if (list.isEmpty()){
 			em.persist(td);
-
+			return td;
 		}
-		
-		return td ;
-		
+		return null;
 	}
 
 }
