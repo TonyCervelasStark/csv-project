@@ -1,46 +1,27 @@
 package com.sopra.work;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-
 public class EmFactory {
 
-	private static EntityManagerFactory instance;
+	private static EntityManagerFactory instance = Persistence.createEntityManagerFactory("data");
 
 	public EmFactory() {
-		// "data" was the value of the name attribute of the
-		// persistence.xml file.
-		instance = Persistence.createEntityManagerFactory("data");
 	}
 
-	public EntityManager getEntityManager() {
-		return instance.createEntityManager();
-	}
-
-	public void close() {
+	public static void close() {
 		instance.close();
+		instance = null;
 	}
-	
-	public static EntityManagerFactory getInstance(){
-		if (instance == null){
-			instance = Persistence.createEntityManagerFactory("data");
-		}
-		return instance;
-	}
-	
-	public static EntityManager createEntityManager(){
-		return getInstance().createEntityManager();
-	}
-	
 
-	public static <T> T transaction(Function<EntityManager,T> worker){
+	public static <T> T transaction(Function<EntityManager, T> worker) {
 
-		EntityManager em = createEntityManager();
+		EntityManager em = instance.createEntityManager();
 		em.getTransaction().begin();
-
 
 		T result = worker.apply(em);
 
@@ -49,12 +30,11 @@ public class EmFactory {
 
 		return result;
 	}
-	
-	public static void voidTransaction(Consumer<EntityManager> worker){
 
-		EntityManager em = createEntityManager();
+	public static void voidTransaction(Consumer<EntityManager> worker) {
+
+		EntityManager em = instance.createEntityManager();
 		em.getTransaction().begin();
-
 
 		worker.accept(em);
 
@@ -62,5 +42,4 @@ public class EmFactory {
 		em.close();
 	}
 
-	
 }

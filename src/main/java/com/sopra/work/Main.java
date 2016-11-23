@@ -12,29 +12,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.persistence.EntityManager;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-
 
 import com.sopra.business.FormationService;
 
 public class Main {
 
 	public static void main(String[] args) throws ParseException {
-
-		EntityManager em = EmFactory.createEntityManager();
-		em.getTransaction().begin();
-		
 		Reader in;
 		try {
 			in = new FileReader("sopra-modified.csv");
 			try {
 				CSVParser records = CSVFormat.RFC4180.withDelimiter(';').withFirstRecordAsHeader().parse(in);
 				for (CSVRecord record : records) {
-					
+
 					// Table Employee
 					Employee employee = new Employee();
 					if (record.get(1).isEmpty()) {
@@ -44,9 +37,13 @@ public class Main {
 					}
 					employee.setName(record.get(7));
 					employee.setFirstname(record.get(8));
+
+					// continue; passe à la commande suivante
+					if (employee.getName().isEmpty() || employee.getFirstname().isEmpty())
+						continue;
+
 					FormationService serviceEmployee = new FormationService();
-					employee = serviceEmployee.avoidDoubleAndEmptyEmployee(employee, em);
-					
+					employee = serviceEmployee.avoidDoubleAndEmptyEmployee(employee);
 
 					// Table Training
 					Training training = new Training();
@@ -66,15 +63,14 @@ public class Main {
 					training.setPlace(record.get(6));
 					training.setOrganism(record.get(9));
 					FormationService serviceTraining = new FormationService();
-					training = serviceTraining.avoidDoubleAndEmptyTraining(training, em);
-					
-					
-					//Table de jointure
+					training = serviceTraining.avoidDoubleAndEmptyTraining(training);
+
+					// Table de jointure
 					TrainingDemand td = new TrainingDemand();
 					td.setEmployee(employee);
 					td.setTraining(training);
 					FormationService serviceTrainingDemand = new FormationService();
-					td = serviceTrainingDemand.createTrainingDemand(td, em);
+					td = serviceTrainingDemand.createTrainingDemand(td);
 				}
 				// System.out.println(records.getRecordNumber());
 			} catch (IOException e) {
@@ -85,9 +81,8 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		em.getTransaction().commit();
-		em.close();
-		EmFactory.getInstance().close();
+
+		EmFactory.close();
 	}
 
 	public static Date modifyDate(String text) {
@@ -111,5 +106,5 @@ public class Main {
 
 		return date;
 	}
-	
+
 }
