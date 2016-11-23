@@ -2,6 +2,7 @@ package com.sopra.business;
 
 import java.util.List;
 
+import javax.management.Query;
 import javax.persistence.EntityManager;
 
 import com.sopra.work.*;
@@ -11,7 +12,7 @@ public class FormationService {
 	List<Employee> daDouble;
 
 	@SuppressWarnings("unchecked")
-	public boolean avoidDoubleAndEmptyEmployee(String name, String firstname, String agency, EntityManager em){
+	public Employee avoidDoubleAndEmptyEmployee(Employee employee, EntityManager em){
 		
 	String query = "SELECT e FROM Employee e WHERE e.name=:name AND e.firstname=:firstname AND e.agency=:agency";
 	
@@ -19,12 +20,17 @@ public class FormationService {
 	
 	list = (List<Employee>) em
 			.createQuery(query)
-			.setParameter("name", name)
-			.setParameter("firstname", firstname)
-			.setParameter("agency", agency)
+			.setParameter("name", employee.getName())
+			.setParameter("firstname", employee.getFirstname())
+			.setParameter("agency", employee.getAgency())
 			.getResultList();
 	
-	return (list.isEmpty() && !name.isEmpty() && !firstname.isEmpty()) ;
+	if (list.isEmpty() && !employee.getName().isEmpty() && !employee.getFirstname().isEmpty()) {
+		em.persist(employee);
+	}
+	
+	return employee;
+	
 	}
 	
 	public Employee findEmployeeById(int id, EntityManager em) {
@@ -32,7 +38,7 @@ public class FormationService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean avoidDoubleAndEmptyTraining(int month, String title, String place, EntityManager em){
+	public Training avoidDoubleAndEmptyTraining(Training training, EntityManager em){
 		
 		String query = "SELECT t FROM Training t WHERE t.month=:month AND t.title=:title AND t.place=:place";
 		
@@ -40,31 +46,42 @@ public class FormationService {
 		
 		list = (List<Employee>) em
 				.createQuery(query)
-				.setParameter("month", month)
-				.setParameter("title", title)
-				.setParameter("place", place)
+				.setParameter("month", training.getMonth())
+				.setParameter("title", training.getTitle())
+				.setParameter("place", training.getPlace())
 				.getResultList();
+						
+
 		
-		return (list.isEmpty() && month != 0 && !title.isEmpty()) ;
+		if (list.isEmpty() && training.getMonth() != 0 && !training.getTitle().isEmpty()) {
+			em.persist(training);
+
+		}
+		
+		return training ;
 		
 	}
 	
 	@SuppressWarnings("unchecked")
-	public boolean createTrainingDemand(Employee employee, Training training, EntityManager em){
+	public TrainingDemand createTrainingDemand(TrainingDemand td, EntityManager em){
 		
-		TrainingDemand td = new TrainingDemand();
 		
 		String query = "SELECT td FROM TrainingDemand td WHERE td.employee=:employee AND td.training=:training";
 		
-		List<Employee> list;
+		List<TrainingDemand> list;
 		
-		list = (List<Employee>) em
+		list = (List<TrainingDemand>) em
 				.createQuery(query)
 				.setParameter("employee", td.getEmployee())
 				.setParameter("training", td.getTraining())
 				.getResultList();
 		
-		return (list.isEmpty()) ;
+		if (list.isEmpty()) {
+			em.persist(td);
+
+		}
+		
+		return td ;
 		
 	}
 
